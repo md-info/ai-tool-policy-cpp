@@ -50,4 +50,5 @@ This library decides; it does not execute tools, authenticate callers, validate 
 
 ## Status
 
-Prototype intended for review. Tests are included for default-deny behavior, capability checks, the model-argument approval bypass, duplicate policy entries, and exclusion of arguments from decision records. Portability and compiler validation remain to be confirmed in CI.
+Prototype published for review. The seven test cases passed in GitHub Actions on Ubuntu, Windows, and macOS for commit `f25095113ead8a75737c3d3bdf8a04cc57c55c95`. This is build/test evidence for those CI environments, not evidence of production integration or an external security review.
+
