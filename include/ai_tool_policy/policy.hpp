@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <map>
 #include <set>
 #include <string>
@@ -7,6 +8,9 @@
 #include <vector>
 
 namespace ai_tool_policy {
+
+// Bound request identifiers before copying them into a decision record.
+inline constexpr std::size_t max_identifier_length = 256;
 
 enum class Decision {
     allow,
