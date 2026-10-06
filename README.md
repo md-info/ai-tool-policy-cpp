@@ -52,5 +52,5 @@ This library decides; it does not execute tools, authenticate callers, validate 
 
 ## Status
 
-Prototype published for review. The seven test cases passed in GitHub Actions on Ubuntu, Windows, and macOS for commit `f25095113ead8a75737c3d3bdf8a04cc57c55c95`. The current 256-byte identifier-bound change has not yet been compiled or run through tests; the earlier CI result does not cover it. This is build/test evidence for the cited commit, not evidence of production integration or an external security review.
+Prototype published for review. The original seven test cases passed in GitHub Actions on Ubuntu, Windows, and macOS for commit `f25095113ead8a75737c3d3bdf8a04cc57c55c95`. The bounded-identifier change adds a regression test; [CI for commit `80c89cfd`](https://github.com/md-info/ai-tool-policy-cpp/actions/runs/37398205815) passed on Ubuntu, Windows, and macOS. This is build/test evidence, not evidence of production integration or an external security review.
 
