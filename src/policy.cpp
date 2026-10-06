@@ -39,11 +39,17 @@ Policy::Policy(std::vector<ToolBinding> tools, std::vector<PrincipalGrant> grant
 }
 
 DecisionRecord Policy::evaluate(const ToolRequest& request) const {
-    DecisionRecord result{request.request_id, request.principal, request.tool,
-                          Decision::deny, Reason::invalid_request};
-    if (request.request_id.empty() || request.principal.empty() || request.tool.empty()) {
+    DecisionRecord result;
+    if (request.request_id.empty() || request.principal.empty() || request.tool.empty() ||
+        request.request_id.size() > max_identifier_length ||
+        request.principal.size() > max_identifier_length ||
+        request.tool.size() > max_identifier_length) {
         return result;
     }
+
+    result.request_id = request.request_id;
+    result.principal = request.principal;
+    result.tool = request.tool;
 
     const auto principal = grants_.find(request.principal);
     if (principal == grants_.end()) {

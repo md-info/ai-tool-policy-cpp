@@ -86,6 +86,30 @@ void test_invalid_request_is_denied() {
     check(record.reason == Reason::invalid_request, "invalid request should have a clear reason");
 }
 
+void test_oversized_identifiers_are_rejected_before_record_copy() {
+    const std::string oversized(ai_tool_policy::max_identifier_length + 1, 'x');
+    const auto policy = sample_policy();
+    const std::vector<ToolRequest> requests = {
+        {oversized, "support-agent", "search", "{}"},
+        {"req-7", oversized, "search", "{}"},
+        {"req-8", "support-agent", oversized, "{}"},
+    };
+    for (const auto& request : requests) {
+        const auto record = policy.evaluate(request);
+        check(record.decision == Decision::deny, "oversized identifier must be denied");
+        check(record.reason == Reason::invalid_request,
+              "oversized identifier should be an invalid request");
+        check(record.request_id.empty() && record.principal.empty() && record.tool.empty(),
+              "invalid identifiers must not be copied into the decision record");
+    }
+
+    const std::string boundary(ai_tool_policy::max_identifier_length, 'x');
+    const auto accepted = policy.evaluate({boundary, "support-agent", "search", "{}"});
+    check(accepted.decision == Decision::allow, "maximum-length identifier should be allowed");
+    check(accepted.request_id.size() == ai_tool_policy::max_identifier_length,
+          "maximum-length request ID should be retained");
+}
+
 void test_duplicate_policy_entries_are_rejected() {
     bool duplicate_tool_rejected = false;
     try {
@@ -114,6 +138,7 @@ int main() {
         {"model cannot approve", test_model_argument_cannot_approve_sensitive_tool},
         {"arguments excluded from record", test_arguments_are_not_copied_to_decision_record},
         {"invalid request", test_invalid_request_is_denied},
+        {"oversized identifiers", test_oversized_identifiers_are_rejected_before_record_copy},
         {"duplicate policy entries", test_duplicate_policy_entries_are_rejected},
     };
 

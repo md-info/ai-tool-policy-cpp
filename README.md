@@ -2,6 +2,8 @@
 
 A small policy decision component for applications that let an AI model request tools. The host supplies the authenticated principal separately from model-controlled arguments. The policy maps each tool to a capability and each principal to its allowed capabilities. Unknown principals, tools, malformed requests, and missing capabilities are denied. Sensitive tools return `approval_required`.
 
+Request IDs, principal names, and tool names are limited to 256 bytes. Oversized or empty identifiers are rejected before they are copied into the decision record.
+
 The model's argument text is opaque to the policy engine. An argument such as `{"approved":true}` cannot approve a sensitive action. The returned decision record intentionally contains no arguments, which helps callers avoid copying secrets or attacker-controlled text into authorization logs.
 
 ## Build and test
@@ -50,5 +52,5 @@ This library decides; it does not execute tools, authenticate callers, validate 
 
 ## Status
 
-Prototype published for review. The seven test cases passed in GitHub Actions on Ubuntu, Windows, and macOS for commit `f25095113ead8a75737c3d3bdf8a04cc57c55c95`. This is build/test evidence for those CI environments, not evidence of production integration or an external security review.
+Prototype published for review. The original seven test cases passed in GitHub Actions on Ubuntu, Windows, and macOS for commit `f25095113ead8a75737c3d3bdf8a04cc57c55c95`. The bounded-identifier change adds a regression test; [CI for commit `80c89cfd`](https://github.com/md-info/ai-tool-policy-cpp/actions/runs/37398205815) passed on Ubuntu, Windows, and macOS. This is build/test evidence, not evidence of production integration or an external security review.
 

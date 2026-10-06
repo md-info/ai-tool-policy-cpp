@@ -29,12 +29,13 @@ This component makes a narrow authorization decision before an application dispa
 | Self-approve a sensitive action with `approved: true` | Arguments are never consulted for approval; sensitive tool returns `approval_required` | Trusted approval service and exact-request binding |
 | Leak argument secrets through audit records | Decision record has no arguments field | Caller must avoid logging arguments elsewhere |
 | Exploit malformed input to widen access | Empty identity fields deny; policy duplicates and empty configuration values reject | Host request parsing and memory safety remain in caller scope |
+| Amplify decision-record copying with oversized identifiers | Empty or over-256-byte request IDs, principal names, and tool names are rejected before any are copied | The host still needs total request-size limits, parsing safeguards, and memory safety |
 
 ## Non-goals and limitations
 
 - This is not a sandbox, prompt-injection detector, authentication system, approval UI, or tool executor.
 - It does not validate JSON syntax or tool-specific schemas; the arguments are opaque.
-- It does not constrain filesystem paths, network destinations, subprocesses, or resource use.
+- It does not constrain filesystem paths, network destinations, subprocesses, or total request/argument resource use. It only bounds the identifier strings copied into a decision record.
 - It does not make a decision based on argument values. If authorization depends on a resource identifier or amount, the host needs a typed, validated authorization context and object-level policy.
 - It does not itself emit or persist audit events. The caller can serialize `DecisionRecord` without arguments.
 - The prototype has not been compiled in this environment yet.
